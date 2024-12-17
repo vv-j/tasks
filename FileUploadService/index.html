@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload Service</title>
+</head>
+<body>
+  <h1>File Upload Service</h1>
+
+ 
+  <h2>Upload File</h2>
+  <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+    <label for="file">Choose a file:</label>
+    <input type="file" name="image" id="file" required />
+    <button type="submit">Upload</button>
+  </form>
+
+  <hr>
+
+  <h2>Download Files</h2>
+  <ul id="fileList"></ul>
+
+  <script>
+    
+    async function fetchFileList() {
+      try {
+        const response = await fetch('/files');
+        const files = await response.json();
+        const fileList = document.getElementById('fileList');
+        fileList.innerHTML = ''; 
+        files.forEach(file => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a href="/uploads/${file}" download>${file}</a>`;
+          fileList.appendChild(li);
+        });
+      } catch (error) {
+        console.error('Error fetching file list:', error);
+      }
+    }
+
+    
+    window.onload = fetchFileList;
+  </script>
+</body>
+</html>
